@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        function searchSystem() {
+            let input = document.getElementById("searchInput").value.toLowerCase();
+            let rows = document.getElementById("dataTable").rows;
+            for(let i=1; i<rows.length; i++){
+                let systemCell = rows[i].cells[1].innerText.toLowerCase();
+                if(systemCell.includes(input)) {
+                    rows[i].style.display = "";
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 p-8">
+<h2 class="text-2xl font-bold mb-4">User Dashboard</h2>
+
+<!-- Search Bar -->
+<input type="text" id="searchInput" onkeyup="searchSystem()" placeholder="Search by System" class="border p-2 rounded mb-4 w-full">
+
+<!-- Data Table -->
+<table id="dataTable" class="min-w-full bg-white border">
+    <thead>
+    <tr>
+        <th class="border px-4 py-2">S.No</th>
+        <th class="border px-4 py-2">System</th>
+        <th class="border px-4 py-2">Environment</th>
+        <th class="border px-4 py-2">URL</th>
+        <th class="border px-4 py-2">Username</th>
+        <th class="border px-4 py-2">Password</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="entry, iterStat : ${entries}">
+        <td class="border px-4 py-2" th:text="${iterStat.index + 1}"></td>
+        <td class="border px-4 py-2" th:text="${entry.system}"></td>
+        <td class="border px-4 py-2" th:text="${entry.environment}"></td>
+        <td class="border px-4 py-2" th:text="${entry.url}"></td>
+        <td class="border px-4 py-2" th:text="${entry.username}"></td>
+        <td class="border px-4 py-2" th:text="${entry.password}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

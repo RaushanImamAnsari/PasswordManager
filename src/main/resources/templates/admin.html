@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        function searchSystem() {
+            let input = document.getElementById("searchInput").value.toLowerCase();
+            let rows = document.getElementById("dataTable").rows;
+            for(let i=1; i<rows.length; i++){
+                let systemCell = rows[i].cells[1].innerText.toLowerCase();
+                if(systemCell.includes(input)) {
+                    rows[i].style.display = "";
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 p-8">
+<h2 class="text-2xl font-bold mb-4">Admin Dashboard</h2>
+
+<!-- Add Entry Form -->
+<form th:action="@{/admin/add}" method="post" class="mb-4 flex gap-2 flex-wrap">
+    <input type="text" name="system" placeholder="System" class="border p-2 rounded" required>
+    <input type="text" name="environment" placeholder="Environment" class="border p-2 rounded" required>
+    <input type="text" name="url" placeholder="URL" class="border p-2 rounded" required>
+    <input type="text" name="username" placeholder="Username" class="border p-2 rounded" required>
+    <input type="text" name="password" placeholder="Password" class="border p-2 rounded" required>
+    <button type="submit" class="bg-green-500 text-white p-2 rounded">Add</button>
+</form>
+
+<!-- Search Bar -->
+<input type="text" id="searchInput" onkeyup="searchSystem()" placeholder="Search by System" class="border p-2 rounded mb-4 w-full">
+
+<!-- Data Table -->
+<table id="dataTable" class="min-w-full bg-white border">
+    <thead>
+    <tr>
+        <th class="border px-4 py-2">S.No</th>
+        <th class="border px-4 py-2">System</th>
+        <th class="border px-4 py-2">Environment</th>
+        <th class="border px-4 py-2">URL</th>
+        <th class="border px-4 py-2">Username</th>
+        <th class="border px-4 py-2">Password</th>
+        <th class="border px-4 py-2">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="entry, iterStat : ${entries}">
+        <td class="border px-4 py-2" th:text="${iterStat.index + 1}"></td>
+        <td class="border px-4 py-2" th:text="${entry.system}"></td>
+        <td class="border px-4 py-2" th:text="${entry.environment}"></td>
+        <td class="border px-4 py-2" th:text="${entry.url}"></td>
+        <td class="border px-4 py-2" th:text="${entry.username}"></td>
+        <td class="border px-4 py-2" th:text="${entry.password}"></td>
+        <td class="border px-4 py-2 flex gap-2">
+            <!-- Update button -->
+            <form th:action="@{/admin/update/{id}(id=${entry.id})}" method="post" class="flex gap-1">
+                <input type="text" name="system" th:value="${entry.system}" class="border p-1 rounded w-16" required>
+                <input type="text" name="environment" th:value="${entry.environment}" class="border p-1 rounded w-16" required>
+                <input type="text" name="url" th:value="${entry.url}" class="border p-1 rounded w-16" required>
+                <input type="text" name="username" th:value="${entry.username}" class="border p-1 rounded w-16" required>
+                <input type="text" name="password" th:value="${entry.password}" class="border p-1 rounded w-16" required>
+                <button type="submit" class="bg-yellow-500 text-white p-1 rounded">Update</button>
+            </form>
+            <!-- Delete button -->
+            <a th:href="@{/admin/delete/{id}(id=${entry.id})}" class="bg-red-500 text-white p-1 rounded">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
